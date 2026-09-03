@@ -13,12 +13,24 @@ convention = {
 metadata=MetaData(naming_convention=convention)
 db=SQLAlchemy(metadata=metadata)
 
+librarian_branches=db.Table("librarian_branches",
+							db.Column("librarian_id",
+				 			db.Integer,
+							db.ForeignKey('librarians.id'),
+							primary_key=True),
+							db.Column("branch_id",
+											db.Integer,
+											db.ForeignKey('library_branches.id'),
+											primary_key=True)
+
+
+							)
+
 #Book model
 class Book(db.Model):
 	__tablename__="books"
 	id=db.Column(db.Integer,primary_key=True) #id INTEGER PRIMARY KEY
 	title=db.Column(db.String(100),nullable=False) #NOT NULL
-	author=db.Column(db.String(100),nullable=False)
 	category=db.Column(db.String(50),nullable=False)
 	available=db.Column(db.Boolean,default=True)
 	author_id=db.Column(db.Integer,db.ForeignKey("authors.id"),nullable=True)
@@ -32,3 +44,18 @@ class Author(db.Model):
 	country=db.Column(db.String(100),nullable=False) #NOT NULL
 	books=db.relationship("Book",back_populates="author_details")
 	
+class Librarian(db.Model):
+	__tablename__="librarians"
+	id=db.Column(db.Integer,primary_key=True) 
+	name=db.Column(db.String(100),nullable=False)
+	email=db.Column(db.String(100),nullable=False,unique=True)
+	branches=db.relationship("LibraryBranch",secondary=librarian_branches,back_populates="librarians")
+
+class LibraryBranch(db.Model):
+	__tablename__="library_branches"
+	id=db.Column(db.Integer,primary_key=True) 
+	name=db.Column(db.String(100),nullable=False)
+	location=db.Column(db.String(100),nullable=False)
+	librarians=db.relationship("Librarian",secondary=librarian_branches,back_populates="branches")
+
+
