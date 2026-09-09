@@ -58,4 +58,10 @@ class LibraryBranch(db.Model):
 	location=db.Column(db.String(100),nullable=False)
 	librarians=db.relationship("Librarian",secondary=librarian_branches,back_populates="branches")
 
+class User(db.Model):
+	__tablename__="users"
+	id=db.Column(db.Integer,primary_key=True) #id INTEGER PRIMARY KEY
+	name=db.Column(db.String(100),nullable=False) #NOT NULL
+	email=db.Column(db.String(100),nullable=False) #NOT NULL
+	password=db.Column(db.String(100),nullable=False)
 
